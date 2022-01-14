@@ -1,0 +1,31 @@
+﻿<Window x:Class="WPF_Test.ProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Test"
+        mc:Ignorable="d"
+        Title="ProgressWindow" Height="296.429" Width="526.19"
+        ResizeMode="NoResize"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" >
+    <Grid>
+        <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="487" Margin="13,21,0,0" Value="0"/>
+        <ListView x:Name="lv_Result" HorizontalAlignment="Left" Height="137" VerticalAlignment="Top" Width="487" Margin="13,70,0,0">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Height" Value="25" />
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Node" Width="100" DisplayMemberBinding="{Binding node_name}"></GridViewColumn>
+                    <GridViewColumn Header="Message" Width="250" DisplayMemberBinding="{Binding message}" ></GridViewColumn>
+                    <GridViewColumn Header="Code" Width="100" DisplayMemberBinding="{Binding response_code}"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="Btn_OK" Content="확인" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" RenderTransformOrigin="3.185,10.912" Margin="217,225,0,0" Click="Btn_OK_Click"/>
+
+    </Grid>
+</Window>

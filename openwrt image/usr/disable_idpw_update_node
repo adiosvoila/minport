@@ -1,0 +1,63 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+start()
+{
+runscript()
+{
+if [ -f /etc/uuid ]
+then
+	echo "UUID Found.." > /dev/kmsg
+	read uuid < /etc/uuid
+else
+	echo "Cannot Found UUID" > /dev/kmsg
+	exit 1
+fi
+
+sleep 5
+IP_Address=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+DATE=$(date +%Y-%m-%d)
+name=$DATE$'-'$uuid$'.ovpn'
+
+echo client > "/tmp/$name"
+echo dev tun >> "/tmp/$name"
+echo proto udp >> "/tmp/$name"
+echo "remote $IP_Address" >> "/tmp/$name"
+echo port 1194 >> "/tmp/$name"
+echo cipher AES-256-CBC >> "/tmp/$name"
+echo comp-lzo >> "/tmp/$name"
+echo nobind >> "/tmp/$name"
+echo verb 3 >> "/tmp/$name"
+echo keepalive 10 120 >> "/tmp/$name"
+echo resolv-retry infinite >> "/tmp/$name"
+echo persist-key >> "/tmp/$name"
+echo persist-tun >> "/tmp/$name"
+echo '<ca>' >> "/tmp/$name"
+echo "$(cat /etc/openvpn/keys/ca.crt)" >> "/tmp/$name"
+echo '</ca>' >> "/tmp/$name"
+echo >> "/tmp/$name"
+echo '<cert>' >> "/tmp/$name"
+echo "$(cat /etc/openvpn/keys/client.crt)" >> "/tmp/$name"
+echo '</cert>' >> "/tmp/$name"
+echo >> "/tmp/$name"
+echo '<key>' >> "/tmp/$name"
+echo "$(cat /etc/openvpn/keys/client.key)" >> "/tmp/$name"
+echo '</key>' >> "/tmp/$name"
+
+#Get OVPN Profile
+base64 -w 0 /tmp/$name > /tmp/profile_base64
+read cert_key < /tmp/profile_base64
+
+#Upload with curl
+#Get Authentication
+auth_result=$(curl -X POST "http://cemcom.codns.com:2095/auth/" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"username\": \"mgs_api_admin\", \"password\": \"l>JreEH4BII9fit%QFTJ\"}")
+echo $auth_result > /tmp/auth_result
+authorization="$(cat /tmp/auth_result | /usr/jq .Authorization)"
+
+#POST node data
+curl -X POST "http://cemcom.codns.com:2095/node/" -H "accept: application/json" -H "Content-Type: application/json" -d '{ "node_name": "'"$uuid"'", "ip_addr": "'"$IP_Address"'", "cert_key": "'"$cert_key"'", "Authorization": '"$authorization"'}'
+
+}
+runscript &
+}
+

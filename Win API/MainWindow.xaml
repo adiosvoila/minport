@@ -1,0 +1,40 @@
+﻿<Window x:Class="WPF_Test.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gl="clr-namespace:System.Globalization;assembly=mscorlib"
+        xmlns:local="clr-namespace:WPF_Test"
+        mc:Ignorable="d"
+        Title="VM Management Console" Height="527.36" Width="711.04"
+        ResizeMode="NoResize"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="329*"/>
+            <ColumnDefinition Width="374*"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="lvVMList" HorizontalAlignment="Left" Height="375" VerticalAlignment="Top" Width="589" Margin="57,71,0,0" Grid.ColumnSpan="2" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="0" VerticalAlignment="Center" IsChecked="{Binding IsChecked}" ></CheckBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Node" Width="240" DisplayMemberBinding="{Binding node_name}"></GridViewColumn>
+                    <GridViewColumn Header="IP Address" Width="140" DisplayMemberBinding="{Binding ip_addr}"></GridViewColumn>
+                    <GridViewColumn Header="Update Date" Width="160" DisplayMemberBinding="{Binding last_updated}" ></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="change_mac_addr_btn" Content="MAC 변경..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="81" Margin="57,28,0,0" Click="change_mac_addr_btn_Click"/>
+        <Button x:Name="Allocate_SOCKS_Btn" Content="SOCKS/OVPN 사용자 할당..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="170" RenderTransformOrigin="2.09,1.752" Margin="150,28,0,0" Click="Allocate_SOCKS_Btn_Click"/>
+        <Button x:Name="SOCKSLeaseListBtn" Content="SOCKS/OVPN 임대 목록..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="158" Margin="2,28,0,0" Click="SOCKSLeaseListBtn_Click" Grid.Column="1"/>
+        <Button x:Name="Refresh_Btn" Content="새로고침" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Grid.Column="1" Margin="242,28,0,0" Click="Refresh_Btn_Click"/>
+        <Button x:Name="GetOVPNProfileBtn" Content="OVPN 프로파일 저장..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="161" Margin="57,459,0,0" Click="GetOVPNProfileBtn_Click"/>
+
+    </Grid>
+</Window>
